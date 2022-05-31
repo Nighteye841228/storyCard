@@ -3,39 +3,39 @@ import { ref, computed, onMounted, watch } from "vue";
 import draggable from "vuedraggable";
 
 const props = defineProps(["cardList"]);
-const temp = computed(() => {
-  return props.cardList.split("\n");
-});
 const headline = computed(() => {
-  return temp.value[0];
+  return props.cardList[0];
 });
 const cards = ref(undefined);
-onMounted(() => {
-  cards.value = temp.value
+const exportWord = computed(() => {
+  return `##${headline.value}\n${cards.value
+    .map((x) => x.name.replace(/\n/g, "<br>"))
+    .join("\n")}`;
+});
+
+defineExpose({ headline, exportWord });
+
+const createCard = (card) => {
+  return card
     .slice(1)
     .filter((x) => x)
     .map((x, index) => {
       return {
-        id: index,
+        id: `${index}${headline.value}`,
         name: x.replace(/<br>/, "\n"),
       };
     });
+};
+onMounted(() => {
+  cards.value = createCard(props.cardList);
 });
 
 watch(
-  () => temp.value,
+  () => props.cardList,
   (newValue) => {
-    cards.value = newValue
-      .slice(1)
-      .filter((x) => x)
-      .map((x, index) => {
-        return {
-          id: index,
-          name: x.replace(/<br>/, "\n"),
-        };
-      });
+    cards.value = createCard(newValue);
   },
-  { deeper: true },
+  { deeper: true }
 );
 </script>
 

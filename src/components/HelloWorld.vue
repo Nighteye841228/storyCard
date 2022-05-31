@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from "vue";
 import CardList from "./CardList.vue";
 
-const inputWord = ref("");
 const data = ref("");
 const isOpenInputText = ref(false);
 
@@ -11,20 +10,32 @@ const cardLists = computed(() => {
 });
 
 function updateWord() {
-  data.value = inputWord.value;
   isOpenInputText.value = false;
+}
+
+const full = ref(null);
+
+function updateInput() {
+  data.value = full.value.map((x) => x.exportWord).join("\n");
 }
 </script>
 
 <template>
   <div class="columns has-text-left">
-    <CardList v-for="cardList in cardLists" :cardList="cardList"></CardList>
+    <CardList
+      ref="full"
+      v-for="cardList in cardLists"
+      :cardList="cardList.split('\n')"
+    ></CardList>
   </div>
   <button
-    class="is-light is-link button update-data"
+    class="is-light is-link button upload-data"
     @click="isOpenInputText = true"
   >
-    上傳｜更新資料
+    上傳資料
+  </button>
+  <button class="is-light is-link button update-data" @click="updateInput">
+    更新資料
   </button>
   <div class="modal" :class="{ 'is-active': isOpenInputText }">
     <div class="modal-background" @click="isOpenInputText = false"></div>
@@ -43,7 +54,7 @@ function updateWord() {
           :placeholder="`##示範第一章\n第一張卡片\n第二張卡片\n第三張卡片\n##第二張卡片`"
           class="textarea"
           rows="10"
-          v-model="inputWord"
+          v-model.lazy="data"
         ></textarea>
       </section>
       <footer class="modal-card-foot">
@@ -64,6 +75,13 @@ function updateWord() {
   position: fixed;
   bottom: 10px;
   right: 10px;
+  z-index: 3;
+}
+
+.upload-data {
+  position: fixed;
+  bottom: 10px;
+  right: 120px;
   z-index: 3;
 }
 </style>

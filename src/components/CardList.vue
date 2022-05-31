@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import draggable from "vuedraggable";
 
 const props = defineProps(["cardList"]);
@@ -8,26 +8,46 @@ const headline = computed(() => {
   return temp[0].replace(/##/, "");
 });
 const cards = ref(undefined);
-cards.value = props.cardList
-  .replace(/##.*/g, "")
-  .match(/.*/gm)
-  .filter((x) => x)
-  .map((x, index) => {
-    return {
-      id: index,
-      name: x.replace(/<br>/, "\n"),
-    };
-  });
-
 onMounted(() => {
-  console.log(headline.value, cards.value);
+  cards.value = props.cardList
+    .replace(/##.*/g, "")
+    .match(/.*/gm)
+    .filter((x) => x)
+    .map((x, index) => {
+      return {
+        id: index,
+        name: x.replace(/<br>/, "\n"),
+      };
+    });
 });
+
+watch(
+  () => props.cardList,
+  (newValue) => {
+    cards.value = newValue
+      .replace(/##.*/g, "")
+      .match(/.*/gm)
+      .filter((x) => x)
+      .map((x, index) => {
+        return {
+          id: index,
+          name: x.replace(/<br>/, "\n"),
+        };
+      });
+  }
+);
 </script>
 
 <template>
   <div class="column is-three-quarters-mobile is-2">
     <p class="subtitle">{{ headline }}</p>
-    <draggable v-model="cards" group="people" item-key="id">
+    <draggable
+      v-model="cards"
+      group="description"
+      animation="200"
+      ghost-class="ghost"
+      item-key="id"
+    >
       <template #item="{ element }">
         <div class="box">
           <div class="content">
@@ -52,7 +72,6 @@ onMounted(() => {
   box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
   margin: 1em;
   min-height: 100vh;
-  
 }
 .box {
   width: inherit-2em;

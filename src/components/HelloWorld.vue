@@ -7,7 +7,7 @@ const data = ref("");
 const isOpenInputText = ref(false);
 
 const cardLists = computed(() => {
-  return data.value.match(/##([^#]+\n)+/g);
+  return data.value.split("##").filter((x) => x);
 });
 
 function updateWord() {

@@ -3,15 +3,16 @@ import { ref, computed, onMounted, watch } from "vue";
 import draggable from "vuedraggable";
 
 const props = defineProps(["cardList"]);
+const temp = computed(() => {
+  return props.cardList.split("\n");
+});
 const headline = computed(() => {
-  const temp = props.cardList.match(/##.*/);
-  return temp[0].replace(/##/, "");
+  return temp.value[0];
 });
 const cards = ref(undefined);
 onMounted(() => {
-  cards.value = props.cardList
-    .replace(/##.*/g, "")
-    .match(/.*/gm)
+  cards.value = temp.value
+    .slice(1)
     .filter((x) => x)
     .map((x, index) => {
       return {
@@ -22,11 +23,10 @@ onMounted(() => {
 });
 
 watch(
-  () => props.cardList,
+  () => temp.value,
   (newValue) => {
     cards.value = newValue
-      .replace(/##.*/g, "")
-      .match(/.*/gm)
+      .slice(1)
       .filter((x) => x)
       .map((x, index) => {
         return {
@@ -34,7 +34,8 @@ watch(
           name: x.replace(/<br>/, "\n"),
         };
       });
-  }
+  },
+  { deeper: true },
 );
 </script>
 

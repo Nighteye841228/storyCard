@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, inject } from "vue";
 import draggable from "vuedraggable";
 
-const props = defineProps(["cardList"]);
+const updateInput = inject('updateInput');
+const props = defineProps(["cardList",'updateInput']);
 const headline = computed(() => {
   return props.cardList[0];
 });
@@ -48,6 +49,7 @@ watch(
       animation="200"
       ghost-class="ghost"
       item-key="id"
+      @change="updateInput"
     >
       <template #item="{ element }">
         <div class="box">

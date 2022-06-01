@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, provide } from "vue";
 import CardList from "./CardList.vue";
 
 const data = ref("");
@@ -18,6 +18,8 @@ const full = ref(null);
 function updateInput() {
   data.value = full.value.map((x) => x.exportWord).join("\n");
 }
+
+provide('updateInput',updateInput);
 </script>
 
 <template>

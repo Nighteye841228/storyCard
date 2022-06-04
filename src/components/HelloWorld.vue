@@ -2,7 +2,12 @@
 import { ref, onMounted, computed, provide } from "vue";
 import CardList from "./CardList.vue";
 
+const props = defineProps(['content']);
+console.log(props.content)
+
+// const data = ref(route.params.content);
 const data = ref("");
+data.value = props.content || "";
 const isOpenInputText = ref(false);
 
 const cardLists = computed(() => {

@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import HelloWorld from '../components/HelloWorld.vue';
 import { content } from "../assets/data";
 
@@ -14,7 +14,7 @@ const routes = [
 
 // 創建一個router，
 const router = createRouter({
-  history: createWebHashHistory(), // 這邊我使用 # 路徑模式
+  history: createWebHistory('/storyCard/'), // 這邊我使用 # 路徑模式
   routes, // 導入使用上方 routes 所定義的路徑
 });
 

@@ -2,8 +2,8 @@
 import { ref, computed, onMounted, watch, inject } from "vue";
 import draggable from "vuedraggable";
 
-const updateInput = inject('updateInput');
-const props = defineProps(["cardList",'updateInput']);
+const updateInput = inject("updateInput");
+const props = defineProps(["cardList", "updateInput"]);
 const headline = computed(() => {
   return props.cardList[0];
 });
@@ -27,16 +27,16 @@ const createCard = (card) => {
       };
     });
 };
-onMounted(() => {
-  cards.value = createCard(props.cardList);
-});
+// onMounted(() => {
+//   cards.value = createCard(props.cardList);
+// });
 
 watch(
   () => props.cardList,
   (newValue) => {
     cards.value = createCard(newValue);
   },
-  { deeper: true }
+  { immediate: true, deeper: true }
 );
 </script>
 
